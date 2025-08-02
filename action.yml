@@ -1,6 +1,6 @@
 name: Delete GitHub Repository
 description: Deletes a GitHub repository using the GitHub API.
-author: Louisiana Office of Technology Services
+author: Lee Lott
 
 inputs:
   repo-name:
