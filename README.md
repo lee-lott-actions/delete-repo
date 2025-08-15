@@ -43,7 +43,7 @@ This GitHub Action deletes a specified GitHub repository using the GitHub API. I
        steps:
          - name: Delete Repository
            id: delete
-           uses: lee-lott-actions/delete-repo@v1.0.0
+           uses: lee-lott-actions/delete-repo@v1
            with:
              repo-name: ${{ github.event.inputs.repo-name }}
              token: ${{ secrets.GITHUB_TOKEN }}
