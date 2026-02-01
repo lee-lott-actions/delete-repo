@@ -32,7 +32,7 @@ Describe "Remove-GitHubRepository" {
         Remove-GitHubRepository -RepoName $RepoName -Token $Token -Owner $Owner
         $output = Get-Content $env:GITHUB_OUTPUT
         $output | Should -Contain "result=failure"
-        $output | Should -Contain "error-message=Failed to delete repository. HTTP Status: 404"
+        $output | Should -Contain "error-message=Error: Failed to delete repository. HTTP Status: 404"
     }
 
     It "delete_repo fails with empty repo_name" {
@@ -55,4 +55,17 @@ Describe "Remove-GitHubRepository" {
         $output | Should -Contain "result=failure"
         $output | Should -Contain "error-message=Missing required parameters: repo-name, token, and owner must be provided."
     }
+	
+	It "writes result=failure and error-message on exception" {
+		Mock Invoke-WebRequest { throw "API Error" }
+
+		try {
+			Remove-GitHubRepository -RepoName $RepoName -Token $Token -Owner $Owner
+		} catch {}
+
+		$output = Get-Content $env:GITHUB_OUTPUT
+		$output | Should -Contain "result=failure"
+		$output | Where-Object { $_ -match "^error-message=Error: Failed to delete repository $Owner/$RepoName\. Exception:" } |
+			Should -Not -BeNullOrEmpty
+	}	
 }
