@@ -36,14 +36,15 @@ function Remove-GitHubRepository {
             Write-Host "Repository $Owner/$RepoName successfully deleted"
             Add-Content -Path $env:GITHUB_OUTPUT -Value "result=success"
         } else {
-            Write-Host "Error: Failed to delete repository $Owner/$RepoName"
-            Add-Content -Path $env:GITHUB_OUTPUT -Value "error-message=Failed to delete repository. HTTP Status: $($response.StatusCode)"
+			$errorMsg = "Error: Failed to delete repository. HTTP Status: $($response.StatusCode)            "
             Add-Content -Path $env:GITHUB_OUTPUT -Value "result=failure"
+			Add-Content -Path $env:GITHUB_OUTPUT -Value "error-message=$errorMsg"
+			Write-Host $errorMsg
         }
     } catch {
-        $httpStatus = $_.Exception.Response.StatusCode.value__
-        Write-Host "Error: Failed to delete repository $Owner/$RepoName. HTTP Status: $httpStatus"
-        Add-Content -Path $env:GITHUB_OUTPUT -Value "error-message=Failed to delete repository. HTTP Status: $httpStatus"
-        Add-Content -Path $env:GITHUB_OUTPUT -Value "result=failure"
+		$errorMsg = "Error: Failed to delete repository $Owner/$RepoName. Exception: $($_.Exception.Message)"
+		Add-Content -Path $env:GITHUB_OUTPUT -Value "result=failure"
+		Add-Content -Path $env:GITHUB_OUTPUT -Value "error-message=$errorMsg"
+		Write-Host $errorMsg
     }
 }
