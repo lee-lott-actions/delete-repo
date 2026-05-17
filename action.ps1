@@ -13,9 +13,7 @@ function Remove-GitHubRepository {
         Add-Content -Path $env:GITHUB_OUTPUT -Value "error-message=Missing required parameters: repo-name, token, and owner must be provided."
         Add-Content -Path $env:GITHUB_OUTPUT -Value "result=failure"
         return
-    }
-
-    Write-Host "Attempting to delete repository $Owner/$RepoName"
+    }    
 
     # Use MOCK_API if set, otherwise default to GitHub API
     $apiBaseUrl = $env:MOCK_API
@@ -29,7 +27,8 @@ function Remove-GitHubRepository {
     }
 
     try {
-        $response = Invoke-WebRequest -Uri $uri -Headers $headers -Method Delete
+		Write-Host "Attempting to delete repository $Owner/$RepoName"
+        $response = Invoke-WebRequest -Uri $uri -Headers $headers -Method Delete -SkipHttpErrorCheck
 
         if ($response.StatusCode -eq 204) {
             Write-Host "Repository $Owner/$RepoName successfully deleted"
