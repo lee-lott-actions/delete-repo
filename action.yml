@@ -29,4 +29,7 @@ runs:
       shell: pwsh
       run: |
         . "${{ github.action_path }}/action.ps1"
-        Remove-GitHubRepository "${{ inputs.repo-name }}" "${{ inputs.token }}" "${{ inputs.owner }}"
+        Remove-GitHubRepository `
+          -RepoName "${{ inputs.repo-name }}" `
+          -Token "${{ inputs.token }}" `
+          -Owner "${{ inputs.owner }}"
